@@ -36,7 +36,7 @@ def threaded_client(ws, player, gameId):
                     break
                 else:
                     if request == "reset":
-                        game.reset()
+                        game.restart()
                     elif len(request) == 1:
                         game.set_letter(request)
                     elif request != "get":

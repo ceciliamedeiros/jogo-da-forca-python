@@ -9,20 +9,19 @@ class Game:
         self.word_q = self.word_a = ""
         self.history = ""
         self.letter = ""
-        self.loss = False
-        self.victory = False
+        self.end = False
         self.repeated = False
         self.ready = False
+        self.winner = 2
 
     def restart(self): 
         self.life = 8
         self.word_q = self.word_a = ""
         self.history = ""
-        self.letter = "",
-        self.loss = False
-        self.victory = False
-        self.repeated = False
+        self.letter = ""
+        self.end = False
         self.ready = False
+        self.winner = 2
 
 
     def connected(self):
@@ -36,14 +35,17 @@ class Game:
             self.victory = True
 
     def ended(self):
-        return self.victory and self.loss
+        return self.end
 
-    def winner(self): 
+    def win(self): 
         if (self.life <= 0):
-            winner = 0
+            self.winner = 0
+            self.end = True
         else:
-            winner = 1
-        return winner
+            if (self.word_a == self.word_q):
+                self.winner = 1
+                self.end = True
+        return self.winner
 
     def initialize_question(self):
         self.word_q = ""
@@ -55,11 +57,13 @@ class Game:
             if self.letter == self.word_a[i]:
                 self.word_q = self.word_q[:i] + self.letter + self.word_q[i+1:]
         self.letter = ""
+        self.win()
     
     def lose_points(self):
         self.history += " " + self.letter
         self.life -= 1
         self.letter = ""
+        self.win()
 
     def has_word(self):
         if self.word_a != "":
@@ -91,5 +95,6 @@ class Game:
             self.replace() 
         else:
             self.lose_points()
+
     
     

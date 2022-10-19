@@ -3,17 +3,15 @@ from network import Network
 import pickle
 pygame.font.init()
 
-LARGURA_TELA = 700 # Não é recomendado alterar esse campo
-ALTURA_TELA = 600 # Não é recomendado alterar esse campo
-FONT = "georgia" # Não é recomendado alterar esse campo
-
-COR_BOTAO = (220,220,220)
-COR_BOTAO_SELECIONADO = (150,150,150)
-COR_BOTAO_BORDA = (100,100,100)
-
-COR_RETANGULO = (200,200,200)
 width = 700
 height = 600
+FONT = "monospace" 
+
+btn_color = (0,102,102)
+btn_color_over = (0,153,153)
+
+COR_RETANGULO = (200,200,200)
+
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
 
@@ -23,7 +21,7 @@ class Button:
         self.x = x
         self.y = y
         self.color = color
-        self.width = 200
+        self.width = 300
         self.height = 100
 
     def draw(self, win):
@@ -32,7 +30,7 @@ class Button:
         text = font.render(self.text, 1, (255, 255, 255))
         win.blit(text, (self.x + round(self.width/2) - round(text.get_width()/2), self.y + round(self.height/2) - round(text.get_height()/2)))
 
-    def click(self, pos):
+    def isOver(self, pos):
         x1 = pos[0]
         y1 = pos[1]
         if self.x <= x1 <= self.x + self.width and self.y <= y1 <= self.y + self.height:
@@ -40,36 +38,37 @@ class Button:
         else:
             return False
 
-buttons = [Button("Iniciar jogo", 100, 500, (0,0,0)), Button("Digitar palavra", 100, 500, (0,0,0)), Button("Digitar letra", 100, 500, (0,0,0))]
-
 def redrawWindow(win, game, player):
     win.fill((173, 216, 230))
     if not(game.connected()):
         font = pygame.font.SysFont(FONT, 30)
-        text = font.render("Aguardando outro jogador!", 1, (255,255,255), True)
+        text = font.render("Aguardando outro jogador!", 1, (0,0,0))
         win.blit(text, (width/2 - text.get_width()/2, height/2 - text.get_height()/2))
     else:
         if(game.has_word()):
             if(player == 0):
                 font = pygame.font.SysFont(FONT, 30)
-                text = font.render("O outro jogador irá fazer suas jogadas", 0, 	(32,178,170), True)
-                text2 = font.render("Vidas restantes: " + str(game.life), 0, 	(32,178,170), True)
-                text3 = font.render(game.get_word_q(), 0, 	(32,178,170), True)
-                text4 = font.render(game.get_history(), 0, (255,255,25), True)
+                text = font.render("O outro jogador irá fazer suas jogadas", 1,(0,0,0))
+                text2 = font.render("Vidas restantes: " + str(game.life), 1, (0,0,0))
+                text3 = font.render(game.get_word_q(), 1, ((0,0,0)))
+                text4 = font.render(game.get_history(), 1, (0,0,0))
+                text5 = font.render(("Histórico"), 1, (0,0,0))
                 win.blit(text, (width/2 - text.get_width()/2, (height - 100 - text.get_height()/2) ))
                 win.blit(text2, (width/2  - text2.get_width()/2, height/2 - 50 - text2.get_height()/2 - 10))
-                win.blit(text3, (width/2  - text3.get_width()/2 - 20, height/2 - text3.get_height()/2- 10))
-                win.blit(text4, (width/2 - text4.get_width()/2 + 10, height/2 - text4.get_height()/2 - 30))
+                win.blit(text3, (width/2  - text3.get_width()/2, height/2 - text3.get_height()/2- 10))
+                win.blit(text4, (width/2 - text4.get_width()/2, height/2 - text4.get_height()/2 + 130))
+                win.blit(text5, (width/2 - text5.get_width()/2, height/2 - text5.get_height()/2 + 90))
                      
             else:
-                font = pygame.font.SysFont(FONT, 50)
-                text = font.render("O outro jogador irá fazer suas jogadas", 0, (255,255,25), True)
-                text2 = font.render("Vidas" + str(game.life), 0, (255,255,25), True)
-                text3 = font.render("p" + game.word_q, 0, (255,255,25), True)
-                text4 = font.render("h" + game.history, 0, (255,255,25), True)
-                win.blit(text2, (width/2  - text.get_width()/2, height/2 - text.get_height()/2 - 20))
-                win.blit(text3, (width/2  - text.get_width()/2, height/2 - text.get_height()/2 - 40))
-                win.blit(text4, (width/2 - text.get_width()/2, height/2 - text.get_height()/2 - 60))
+                font = pygame.font.SysFont(FONT, 30)
+                text2 = font.render("Vidas restantes: " + str(game.life), 1, (0,0,0))
+                text3 = font.render(game.get_word_q(), 1, ((0,0,0)))
+                text4 = font.render(game.get_history(), 1, (0,0,0))
+                text5 = font.render(("Histórico"), 1, (0,0,0))
+                win.blit(text2, (width/2  - text2.get_width()/2, height/2 - 50 - text2.get_height()/2 - 10))
+                win.blit(text3, (width/2  - text3.get_width()/2, height/2 - text3.get_height()/2- 10))
+                win.blit(text4, (width/2 - text4.get_width()/2, height/2 - text4.get_height()/2 + 130))
+                win.blit(text5, (width/2 - text5.get_width()/2, height/2 - text5.get_height()/2 + 90))
                 for btn in buttons:
                     if(btn.text == "Digitar letra"):
                         btn.draw(win)
@@ -80,8 +79,8 @@ def redrawWindow(win, game, player):
                         btn.draw(win)
 
             else:
-                font = pygame.font.SysFont(FONT, 20)
-                text = font.render("Aguardando o oponente digitar a palavra", 0, (255,255,25), True)
+                font = pygame.font.SysFont(FONT, 30)
+                text = font.render("Aguardando o oponente digitar a palavra", 0, (0,0,0))
                 win.blit(text, (width/2 - text.get_width()/2, height/2 - text.get_height()/2))
 
 
@@ -90,7 +89,7 @@ def redrawWindow(win, game, player):
 
 def get_word():
     base_font = pygame.font.Font(None, 32)
-    input_rect = pygame.Rect(200, 200, 140, 32)
+    input_rect = pygame.Rect(270, height/2-32, 140, 32)
 
     color = pygame.Color('lightskyblue3')  
     word = ""
@@ -105,9 +104,11 @@ def get_word():
                     active = True 
             if active == True:
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         active = False
                         aux = False
+                    elif event.key == pygame.K_BACKSPACE:
+                        word = word[:(len(word)-1)]
                     else:
                         word += pygame.key.name(event.key)       
                             
@@ -123,7 +124,7 @@ def get_word():
 
 def get_letter():
     base_font = pygame.font.Font(None, 32)
-    input_rect = pygame.Rect(200, 200, 140, 32)
+    input_rect = pygame.Rect(270, height/2-32, 140, 32)
 
     color = pygame.Color('lightskyblue3')  
     active = False  
@@ -138,7 +139,7 @@ def get_letter():
                     active = True 
             if active == True:
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         active = False
                         aux = False
                     else:
@@ -154,7 +155,7 @@ def get_letter():
 
     return letter
        
-buttons = [Button("Iniciar jogo", 100, 500, (0,0,0)), Button("Digitar palavra", 100, 500, (0,0,0)), Button("Digitar letra", 100, 500, (0,0,0))]
+buttons = [Button("Digitar palavra", 200, height/2+100, btn_color), Button("Digitar letra", 200, 100, btn_color)]
 
 
 def main():
@@ -175,7 +176,16 @@ def main():
 
 
         if game.ended():
-            redrawWindow(win, game, player)
+            font = pygame.font.SysFont(FONT, 80)
+            if (game.win() == 1 and player == 1) or  (game.win() == 0 and player == 0):
+                text = font.render("Você GANHOU!", 1, (0, 102, 0))
+            else:
+                text = font.render("Você perdeu :(", 1, (204, 0, 0))
+
+            win.blit(text, (width/2 - text.get_width()/2, height/2 - text.get_height()/2))
+            pygame.display.update()
+            pygame.time.delay(5000)
+
             pygame.time.delay(200)
             try:
                 game = network.send("reset")
@@ -184,25 +194,24 @@ def main():
                 print("Could not get the game.")
                 break
 
-            font = pygame.font.SysFont(FONT, 90)
-            if (game.winner() == 1 and player == 1) or  (game.winner() == 0 and player == 0):
-                text = font.render("You WON!", 1, (255, 0, 0))
-            else:
-                text = font.render("You lost.", 1, (255, 0, 0))
-
-            win.blit(text, (width/2 - text.get_width()/2, height/2 - text.get_height()/2))
-            pygame.display.update()
-            pygame.time.delay(2000)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
             
+            if event.type == pygame.MOUSEMOTION:
+                color = pygame.Color('lightskyblue3')  
+                pos = pygame.mouse.get_pos()
+                for btn in buttons:
+                    if btn.isOver(pos) and game.connected():
+                        btn.color = btn_color_over
+                    else:
+                        btn.color = btn_color
+            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 for btn in buttons:
-                    if btn.click(pos) and game.connected():
+                    if btn.isOver(pos) and game.connected():
                         if(btn.text == "Digitar palavra"):
                             if(player == 0) and not(game.has_word()):
                                 word = get_word()
@@ -210,7 +219,6 @@ def main():
                         if(btn.text == "Digitar letra"):
                             if(player == 1):
                                 letter = get_letter()
-                                print(letter)
                                 game = network.send(letter)
                             
 
@@ -222,8 +230,8 @@ def menu():
 
     while run:
         clock.tick(60)
-        win.fill((48, 72, 136))
-        font = pygame.font.SysFont(FONT, 40)
+        win.fill((173, 216, 230))
+        font = pygame.font.SysFont(FONT, 30)
         text = font.render("Bem vindo ao jogo da forca!", 1, (0,0,0))
         text2 = font.render("Clique em qualquer lugar para jogar", 1, (0,0,0))
         win.blit(text, (100,200))
